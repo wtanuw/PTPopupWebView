@@ -46,7 +46,11 @@ open class PTPopupWebView : UIView {
     // Web view container (WKWebView can not be allocated on the StoryBoard)
     @IBOutlet weak internal var webViewContainer : UIView!
     open fileprivate(set) var webView = WKWebView()
-
+    
+    /*! @abstract The web view's navigation delegate. */
+    weak open var navigationDelegate: WKNavigationDelegate?
+    /*! @abstract The web view's user interface delegate. */
+    weak open var uiDelegate: WKUIDelegate?
 
     /* Property */
     
@@ -347,6 +351,7 @@ open class PTPopupWebView : UIView {
         
         // WKNavigationDelegate
         webView.navigationDelegate = self
+        webView.uiDelegate = self
     }
     
     deinit {
@@ -568,6 +573,112 @@ extension PTPopupWebView : WKNavigationDelegate {
         }
         
         decisionHandler(.allow)
+    }
+    
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        decisionHandler(.allow)
+    }
+    
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential) -> Void) {
+        
+    }
+    
+    public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        
+    }
+}
+
+extension PTPopupWebView : WKUIDelegate {
+    
+    public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        return webView
+    }
+    
+    public func webViewDidClose(_ webView: WKWebView) {
+        
+    }
+    
+    public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping () -> Void) {
+        
+        guard let uiDelegate = uiDelegate else {
+            return
+        }
+//        guard let method = uiDelegate.webView!(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)? else {
+//            return
+//        }
+//        method
+        if #available(iOS 9.0, *) {
+            uiDelegate.webView?(webView, runJavaScriptAlertPanelWithMessage: message, initiatedByFrame: frame, completionHandler: completionHandler)
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    
+    public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping (Bool) -> Void) {
+        
+//        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+//        
+//        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+//            completionHandler(true)
+//        }))
+//        
+//        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+//            completionHandler(false)
+//        }))
+//        
+//        present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping (String?) -> Void) {
+        
+//        let alertController = UIAlertController(title: nil, message: prompt, preferredStyle: .actionSheet)
+//        
+//        alertController.addTextField { (textField) in
+//            textField.text = defaultText
+//        }
+//        
+//        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+//            if let text = alertController.textFields?.first?.text {
+//                completionHandler(text)
+//            } else {
+//                completionHandler(defaultText)
+//            }
+//        }))
+//        
+//        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+//            completionHandler(nil)
+//        }))
+//        
+//        present(alertController, animated: true, completion: nil)
     }
 }
 
